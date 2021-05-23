@@ -49,22 +49,28 @@ st.title("TFS File Viewer")
 
 # ----- Sidebar Widgets ----- #
 
-st.sidebar.title("TFS Viewer Options")
-chosen_index: str = st.sidebar.text_input("Load Index", help="Column to use as index")
-
+# st.sidebar.title("TFS Viewer Options")
+st.sidebar.header("Data Manipulation")
+chosen_index: str = st.sidebar.text_input("Select Load Index", help="Column to use as index.")
+dataframe_query: str = st.sidebar.text_input(
+    "Apply Query to Data",
+    help="Any query to apply to the dataframe, to be given to `DataFrame.query`. See the [documentation]"
+         "(https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html) "
+         "for usage details.",
+)
 st.sidebar.header("Display Options")
 show_headers: bool = st.sidebar.checkbox(
-    "Show File Headers", value=True, help="Whether to display the `header` of the loaded file"
+    "Show File Headers", value=True, help="Whether to display the `header` of the loaded file."
 )
 show_dataframe: bool = st.sidebar.checkbox(
-    "Show File DataFrame", value=True, help="Whether to display the `DataFrame` of the loaded file"
+    "Show File DataFrame", value=True, help="Whether to display the `DataFrame` of the loaded file."
 )
 if show_dataframe:
     dataframe_height: int = st.sidebar.select_slider(
         "DataFrame Display Height", options=list(range(100, 850, 50)), value=400
     )
-generate_report: bool = st.sidebar.checkbox(
-    "Generate Exploratory Report",
+generate_report: bool = st.sidebar.button(  # button?
+    "Generate An Exploratory Report",
     help="Generate and display a `pandas_profiling` report. Beware: This can be time-intensive on big files!",
 )
 
@@ -72,7 +78,7 @@ generate_report: bool = st.sidebar.checkbox(
 
 st.sidebar.header("Visualizations")
 do_line_chart: bool = st.sidebar.checkbox(
-    "Craft a Line Chart", help="Check this box to create a simple `Altair` line chart visualization"
+    "Craft a Line Chart", help="Check this box to create a simple `Altair` line chart visualization."
 )
 if do_line_chart:
     line_chart_height = st.sidebar.select_slider(
@@ -80,7 +86,7 @@ if do_line_chart:
     )
 
 do_bar_chart: bool = st.sidebar.checkbox(
-    "Craft a Bar Chart", help="Check this box to create a simple `Altair` bar chart visualization"
+    "Craft a Bar Chart", help="Check this box to create a simple `Altair` bar chart visualization."
 )
 if do_bar_chart:
     bar_chart_height = st.sidebar.select_slider(
@@ -90,11 +96,12 @@ if do_bar_chart:
 # ----- Section: User Input ----- #
 
 st.header("Let's Get Your File")
-uploaded_file = st.file_uploader("File to load", help="Select your TFS File")
+uploaded_file = st.file_uploader("File to load", help="Select your TFS File.")
 
 if uploaded_file is not None:
     file, file_path = handle_file_upload(uploaded_file)
     headers, dataframe = load_tfs_file(file_path, chosen_index, file)
+    dataframe = dataframe.query(dataframe_query) if dataframe_query != "" else dataframe
 
     # ----- Section: File Data Display ----- #
     if show_headers:
@@ -112,12 +119,12 @@ if uploaded_file is not None:
 
 # ----- Footer ----- #
 
-expander = st.beta_expander("What is This and Who is it For?")
-expander.write(
-    "This is a prototype of a simple `streamlit` app to allow my team to easily delve into the contents of a "
-    "[TFS file](https://mad.web.cern.ch/mad/madx.old/Introduction/tfs.html), which we use in our work. "
-    "It uses our own `tfs-pandas` package to handle the format and integrates the `pandas_profiling` library "
-    "to get quick insights into the data. Options are also provided to quickly craft simple plots from the "
-    "data using `streamlit`'s API."
-)
-expander.write("**DISCLAIMER**: Functionality may change quickly without notice.")
+with st.beta_expander("What is This and Who is it For?"):
+    st.write(
+        "This is a prototype of a simple `streamlit` app to allow my team and I to easily delve into the "
+        "contents of a [TFS file](https://mad.web.cern.ch/mad/madx.old/Introduction/tfs.html), which we use "
+        "in our work. It uses our own `tfs-pandas` package to handle the format and integrates the "
+        "`pandas_profiling` library to get quick insights into the data. Options are also provided to "
+        "quickly craft simple plots from the data using `streamlit`'s API."
+    )
+    st.write("**DISCLAIMER**: Functionality may change quickly without notice.")
