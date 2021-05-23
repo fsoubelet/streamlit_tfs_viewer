@@ -55,12 +55,12 @@ chosen_index: str = st.sidebar.text_input("Select Load Index", help="Column to u
 dataframe_query: str = st.sidebar.text_input(
     "Apply Query to Data",
     help="Any query to apply to the dataframe, to be given to `DataFrame.query`. See the [documentation]"
-         "(https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html) "
-         "for usage details.",
+    "(https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html) "
+    "for usage details.",
 )
 st.sidebar.header("Display Options")
 show_headers: bool = st.sidebar.checkbox(
-    "Show File Headers", value=True, help="Whether to display the `header` of the loaded file."
+    "Show File Headers", value=False, help="Whether to display the `header` of the loaded file."
 )
 show_dataframe: bool = st.sidebar.checkbox(
     "Show File DataFrame", value=True, help="Whether to display the `DataFrame` of the loaded file."
@@ -69,7 +69,12 @@ if show_dataframe:
     dataframe_height: int = st.sidebar.select_slider(
         "DataFrame Display Height", options=list(range(100, 850, 50)), value=400
     )
-generate_report: bool = st.sidebar.button(  # button?
+    color_map: str = st.sidebar.selectbox(
+        "Display Color Map",
+        options=["None", "viridis", "plasma", "inferno", "magma", "cividis"],
+        help="Which colormap to apply when styling the `DataFrame`.",
+    )
+generate_report: bool = st.sidebar.button(
     "Generate An Exploratory Report",
     help="Generate and display a `pandas_profiling` report. Beware: This can be time-intensive on big files!",
 )
@@ -107,7 +112,7 @@ if uploaded_file is not None:
     if show_headers:
         display_file_headers(headers)
     if show_dataframe:
-        display_file_dataframe(dataframe, dataframe_height)
+        display_file_dataframe(dataframe, dataframe_height, color_map)
     if generate_report:
         display_dataframe_report(dataframe)
 

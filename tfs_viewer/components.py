@@ -12,10 +12,15 @@ def display_file_headers(headers_dict: dict) -> None:
     st.write(headers_dict)
 
 
-def display_file_dataframe(data_frame: pd.DataFrame, height: int) -> None:
-    """Simply display dataframe."""
+def display_file_dataframe(data_frame: pd.DataFrame, height: int, colormap: str) -> None:
+    """Simply display dataframe, as a Styler object if a colormap is given."""
     st.header("File Data", anchor="dataframe")
-    st.dataframe(data_frame, height=height)
+    styler = (
+        data_frame.style.background_gradient(cmap=colormap).highlight_null(null_color="red")
+        if colormap != "None"
+        else data_frame
+    )
+    st.dataframe(styler, height=height)
 
 
 def display_dataframe_report(data_frame: pd.DataFrame) -> None:
