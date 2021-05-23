@@ -32,9 +32,12 @@ def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, 
     Returns:
         A tuple of the TfsDataFrame's headers (dictionary) and the dataframe itself as a pandas.DataFrame.
     """
-    tfs_df = tfs.read(tfs_file_path, index)
-    os.close(file_obj)  # remember to close (and delete) the tempfile
-    return tfs_df.headers, pd.DataFrame(tfs_df)
+    try:
+        tfs_df = tfs.read(tfs_file_path, index)
+        os.close(file_obj)  # remember to close (and delete) the tempfile
+        return tfs_df.headers, pd.DataFrame(tfs_df)
+    except Exception as error:
+        st.write(error)
 
 
 # ----- Page Config ----- #
