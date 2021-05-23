@@ -1,6 +1,6 @@
 # TFS File Viewer
 
-This is a simple prototype making use of `streamlit` to explore the contents of a TFS file.
+This is a simple prototype making use of `streamlit` to explore the contents of a **TFS** file.
 
 ## Getting Started
 
@@ -14,6 +14,11 @@ cd tfs_viewer_prototype
 poetry install
 poetry run streamlit run tfs_viewer/app.py
 ```
+
+## License
+
+Copyright &copy; 2021 Felix Soubelet. [MIT License](LICENSE)
+
 
 [streamlit_badge]: https://static.streamlit.io/badges/streamlit_badge_black_white.svg
 [demo_link]: https://share.streamlit.io/fsoubelet/tfs_viewer_prototype/tfs_viewer/app.py
