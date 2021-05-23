@@ -4,7 +4,7 @@ This is a simple prototype making use of `streamlit` to explore the contents of 
 
 ## Getting Started
 
-Try a demo online: [![Open in Streamlit][streamlit_badge]][demo_link]
+[![Open in Streamlit][streamlit_badge]][demo_link]
 
 To run the app locally, you will need get `Poetry` and clone this repository.
 Steps are simple:
