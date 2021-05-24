@@ -21,6 +21,7 @@ def get_scatter_plot_params(data_frame: pd.DataFrame) -> Tuple[str, Sequence[str
             "Columns to Plot",
             options=data_frame.columns.to_numpy(),
             help="Select the columns to plot in this chart",
+            key="columns_for_scatterplot",
         )
     with plot_mode:
         mode: str = st.selectbox(
@@ -38,6 +39,7 @@ def get_distplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
             "Columns to Plot",
             options=data_frame.columns.to_numpy(),
             help="Select the columns to plot in this chart",
+            key="columns_for_histogram",
         )
     with marginal_mode:
         mode: str = st.selectbox(
