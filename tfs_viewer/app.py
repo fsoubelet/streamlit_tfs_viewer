@@ -101,6 +101,12 @@ if do_bar_chart:
         "Bar Chart Height", options=list(range(200, 1050, 50)), value=400
     )
 
+# ----- Sidebar Badge to Github Repository ----- #
+
+st.sidebar.markdown(
+    "[![Github](https://badgen.net/badge/icon/GitHub?icon=github&color=black&label)](https://github.com/fsoubelet/tfs_viewer_prototype)"
+)
+
 # ----- Section: User Input ----- #
 
 st.header("Let's Get Your File")
