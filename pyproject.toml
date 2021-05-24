@@ -11,6 +11,7 @@ pandas-profiling = "^3.0.0"
 streamlit-pandas-profiling = "^0.1.2"
 tfs-pandas = "^2.0.2"
 watchdog = "^2.1.2"
+plotly = "^4.14.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

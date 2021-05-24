@@ -5,14 +5,12 @@ import pandas as pd
 import streamlit as st
 import tfs
 
-from tfs_viewer.components import (
-    craft_bar_chart,
-    craft_line_chart,
-    display_dataframe_report,
-    display_file_dataframe,
-    display_file_headers,
-)
+from tfs_viewer.components import display_dataframe_report, display_file_dataframe, display_file_headers
+from tfs_viewer.figures import plotly_distplot, plotly_line_chart
 from tfs_viewer.utils import handle_file_upload
+
+GITHUB_BADGE = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"
+GITHUB_URL = "https://github.com/fsoubelet/tfs_viewer_prototype"
 
 # ----- Cached Functions ----- #
 
@@ -40,19 +38,23 @@ def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, 
         st.write(error)
 
 
+@st.cache()
+def apply_dataframe_query(data_frame: pd.DataFrame, query: str) -> pd.DataFrame:
+    return dataframe.query(dataframe_query)
+
+
 # ----- Page Config ----- #
 
 st.set_page_config(
-    page_title="TFS File Viewer, Plotter and Analyzer",
+    page_title="TFS File Explorer",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded",
 )
-st.title("TFS File Viewer")
+st.title(f"TFS File Explorer [![Github]({GITHUB_BADGE})]({GITHUB_URL})")
 
 # ----- Sidebar Widgets ----- #
 
-# st.sidebar.title("TFS Viewer Options")
 st.sidebar.header("Data Manipulation")
 chosen_index: str = st.sidebar.text_input("Select Load Index", help="Column to use as index.")
 dataframe_query: str = st.sidebar.text_input(
@@ -85,27 +87,22 @@ generate_report: bool = st.sidebar.button(
 # ----- Sidebar Visualization Options ----- #
 
 st.sidebar.header("Visualizations")
-do_line_chart: bool = st.sidebar.checkbox(
-    "Craft a Line Chart", help="Check this box to create a simple `Altair` line chart visualization."
+make_scatterplot: bool = st.sidebar.checkbox(
+    "Craft a ScatterPlot",
+    help="Check this box to create a `Plotly` histogram plot.",
 )
-if do_line_chart:
+if make_scatterplot:
     line_chart_height = st.sidebar.select_slider(
-        "Line Chart Height", options=list(range(200, 1050, 50)), value=400
+        "ScatterPlot Figure Height", options=list(range(200, 1050, 50)), value=600
     )
 
-do_bar_chart: bool = st.sidebar.checkbox(
-    "Craft a Bar Chart", help="Check this box to create a simple `Altair` bar chart visualization."
+make_histogram: bool = st.sidebar.checkbox(
+    "Craft a Histogram", help="Check this box to create a `Plotly` histogram plot."
 )
-if do_bar_chart:
-    bar_chart_height = st.sidebar.select_slider(
-        "Bar Chart Height", options=list(range(200, 1050, 50)), value=400
+if make_histogram:
+    histogram_plot_height = st.sidebar.select_slider(
+        "Histogram Figure Height", options=list(range(200, 1050, 50)), value=600
     )
-
-# ----- Sidebar Badge to Github Repository ----- #
-
-st.sidebar.markdown(
-    "[![Github](https://badgen.net/badge/icon/GitHub?icon=github&color=black&label)](https://github.com/fsoubelet/tfs_viewer_prototype)"
-)
 
 # ----- Section: User Input ----- #
 
@@ -115,7 +112,7 @@ uploaded_file = st.file_uploader("File to load", help="Select your TFS File.")
 if uploaded_file is not None:
     file, file_path = handle_file_upload(uploaded_file)
     headers, dataframe = load_tfs_file(file_path, chosen_index, file)
-    dataframe = dataframe.query(dataframe_query) if dataframe_query != "" else dataframe
+    dataframe = apply_dataframe_query(dataframe, dataframe_query) if dataframe_query != "" else dataframe
 
     # ----- Section: File Data Display ----- #
     if show_headers:
@@ -126,10 +123,10 @@ if uploaded_file is not None:
         display_dataframe_report(dataframe)
 
     # ----- Section: Visualizations ----- #
-    if do_line_chart:
-        craft_line_chart(dataframe, line_chart_height)
-    if do_bar_chart:
-        craft_bar_chart(dataframe, bar_chart_height)
+    if make_scatterplot:
+        plotly_line_chart(dataframe, line_chart_height)
+    if make_histogram:
+        plotly_distplot(dataframe, histogram_plot_height)
 
 # ----- Footer ----- #
 
