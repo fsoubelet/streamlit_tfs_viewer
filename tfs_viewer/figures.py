@@ -32,7 +32,7 @@ def get_scatter_plot_params(data_frame: pd.DataFrame) -> Tuple[str, Sequence[str
     return versus, to_plot, mode
 
 
-def get_distplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, str]:
+def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, str]:
     plot_columns, marginal_mode, normalization_mode, nbins_query = st.beta_columns([2, 1, 1, 1])
     with plot_columns:
         to_plot: Sequence[str] = st.multiselect(
@@ -59,7 +59,7 @@ def get_distplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
             value=100,
             step=25,
             min_value=5,
-            max_value=500,
+            max_value=1000,
             help="Number of bins in the histogram",
         )
     return to_plot, mode, histnorm, nbins
@@ -73,7 +73,7 @@ def plotly_line_chart(data_frame: pd.DataFrame, height: int = 400) -> None:
     fig = go.Figure(layout=go.Layout(height=height))
     for variable in plot_quantities:
         fig.add_trace(
-            go.Scatter(
+            go.Scattergl(
                 x=data_frame[versus].to_numpy(),
                 y=data_frame[variable].to_numpy(),
                 mode=mode,
@@ -81,11 +81,13 @@ def plotly_line_chart(data_frame: pd.DataFrame, height: int = 400) -> None:
             )
         )
     st.plotly_chart(fig, use_container_width=True)
+    # if st.button("Export to HTML"):
+    #     fig.write_html("scatterplot.html")
 
 
-def plotly_distplot(data_frame: pd.DataFrame, height: int = 400) -> None:
-    plot_quantities, marginal_mode, histnorm, n_bins = get_distplot_params(data_frame)
-    if plot_quantities:  # error if not
+def plotly_histogram(data_frame: pd.DataFrame, height: int = 400) -> None:
+    plot_quantities, marginal_mode, histnorm, n_bins = get_histplot_params(data_frame)
+    if plot_quantities:  # errors if not
         norm_method = None if histnorm == "None" else histnorm
         fig = px.histogram(
             data_frame,
@@ -97,3 +99,5 @@ def plotly_distplot(data_frame: pd.DataFrame, height: int = 400) -> None:
             nbins=n_bins,
         )
         st.plotly_chart(fig, use_container_width=True)
+    # if st.button("Export to HTML"):
+    #     fig.write_html("histogram.html")

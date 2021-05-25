@@ -6,7 +6,7 @@ import streamlit as st
 import tfs
 
 from tfs_viewer.components import display_dataframe_report, display_file_dataframe, display_file_headers
-from tfs_viewer.figures import plotly_distplot, plotly_line_chart
+from tfs_viewer.figures import plotly_histogram, plotly_line_chart
 from tfs_viewer.utils import handle_file_upload
 
 GITHUB_BADGE = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"
@@ -89,7 +89,7 @@ generate_report: bool = st.sidebar.button(
 st.sidebar.header("Visualizations")
 make_scatterplot: bool = st.sidebar.checkbox(
     "Craft a ScatterPlot",
-    help="Check this box to create a `Plotly` histogram plot.",
+    help="Check this box to create a `Plotly` scatter or line plot.",
 )
 if make_scatterplot:
     line_chart_height = st.sidebar.select_slider(
@@ -126,7 +126,7 @@ if uploaded_file is not None:
     if make_scatterplot:
         plotly_line_chart(dataframe, line_chart_height)
     if make_histogram:
-        plotly_distplot(dataframe, histogram_plot_height)
+        plotly_histogram(dataframe, histogram_plot_height)
 
 # ----- Footer ----- #
 
