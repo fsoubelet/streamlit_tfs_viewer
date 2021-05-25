@@ -6,7 +6,7 @@ import streamlit as st
 import tfs
 
 from tfs_viewer.displays import display_dataframe_report, display_file_dataframe, display_file_headers
-from tfs_viewer.figures import plotly_histogram, plotly_line_chart, plotly_density_contour
+from tfs_viewer.figures import plotly_density_contour, plotly_histogram, plotly_line_chart
 from tfs_viewer.utils import handle_file_upload
 
 GITHUB_BADGE = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"

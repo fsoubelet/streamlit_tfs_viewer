@@ -66,7 +66,7 @@ def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
 
 
 def get_density_plot_params(data_frame: pd.DataFrame) -> Tuple[str, str]:
-    xaxis, yaxis = st.beta_columns([1, 1])
+    xaxis, yaxis, contours, cmap, cmap_reverse = st.beta_columns([3, 3, 2, 2, 2])
     with xaxis:
         xaxis_var: str = st.selectbox(
             "Property on the Horizontal Axis",
@@ -79,7 +79,25 @@ def get_density_plot_params(data_frame: pd.DataFrame) -> Tuple[str, str]:
             options=data_frame.columns.to_numpy(),
             help="Select the column that will be on the vertical axis",
         )
-    return xaxis_var, yaxis_var
+    with contours:
+        coloring: str = st.selectbox(
+            "Contour Types",
+            options=["fill", "heatmap", "lines", "none"],
+            help="Whether to fill the contours by extrapolating data",
+        )
+    with cmap:
+        colorscale: str = st.selectbox(
+            "Color Map",
+            options=["Default"] + [map.capitalize() for map in px.colors.named_colorscales()],
+            help="Which sequencial colormap to use for this plot",
+        )
+    with cmap_reverse:
+        reverse_cmap: str = st.selectbox(
+            "Colormap Scale",
+            options=["Classic", "Reversed"],
+            help="Whether to " "reverse the " "colormap for " "the plot",
+        )
+    return xaxis_var, yaxis_var, coloring, colorscale, reverse_cmap
 
 
 # ----- Plotting Functions ----- #
@@ -121,7 +139,12 @@ def plotly_histogram(data_frame: pd.DataFrame, height: int = 600) -> None:
 
 
 def plotly_density_contour(data_frame: pd.DataFrame, height: int = 600) -> None:
-    xcol, ycol = get_density_plot_params(data_frame)
+    xcol, ycol, coloring, cmap, reverse_cmap = get_density_plot_params(data_frame)
     fig = px.density_contour(data_frame, x=xcol, y=ycol, height=height)
-    fig.update_traces(contours_coloring="fill", contours_showlabels=True)
+    fig.update_traces(
+        contours_coloring=coloring,
+        contours_showlabels=True,
+        colorscale=None if cmap == "Default" else cmap,
+        reversescale=True if reverse_cmap == "Reversed" else False,
+    )
     st.plotly_chart(fig, use_container_width=True)
