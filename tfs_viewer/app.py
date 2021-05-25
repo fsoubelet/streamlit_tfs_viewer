@@ -5,8 +5,8 @@ import pandas as pd
 import streamlit as st
 import tfs
 
-from tfs_viewer.components import display_dataframe_report, display_file_dataframe, display_file_headers
-from tfs_viewer.figures import plotly_histogram, plotly_line_chart
+from tfs_viewer.displays import display_dataframe_report, display_file_dataframe, display_file_headers
+from tfs_viewer.figures import plotly_histogram, plotly_line_chart, plotly_density_contour
 from tfs_viewer.utils import handle_file_upload
 
 GITHUB_BADGE = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"
@@ -104,6 +104,14 @@ if make_histogram:
         "Histogram Figure Height", options=list(range(200, 1050, 50)), value=600
     )
 
+make_density_plot: bool = st.sidebar.checkbox(
+    "Craft a Density Plot", help="Check this box to create a `Plotly` density plot."
+)
+if make_density_plot:
+    density_plot_height = st.sidebar.select_slider(
+        "Density Figure Height", options=list(range(200, 1050, 50)), value=600
+    )
+
 # ----- Section: User Input ----- #
 
 st.header("Let's Get Your File")
@@ -127,6 +135,8 @@ if uploaded_file is not None:
         plotly_line_chart(dataframe, line_chart_height)
     if make_histogram:
         plotly_histogram(dataframe, histogram_plot_height)
+    if make_density_plot:
+        plotly_density_contour(dataframe, density_plot_height)
 
 # ----- Footer ----- #
 

@@ -65,10 +65,27 @@ def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
     return to_plot, mode, histnorm, nbins
 
 
+def get_density_plot_params(data_frame: pd.DataFrame) -> Tuple[str, str]:
+    xaxis, yaxis = st.beta_columns([1, 1])
+    with xaxis:
+        xaxis_var: str = st.selectbox(
+            "Property on the Horizontal Axis",
+            options=data_frame.columns.to_numpy(),
+            help="Select the column that will be on the horizontal axis",
+        )
+    with yaxis:
+        yaxis_var: str = st.selectbox(
+            "Property on the Vertical Axis",
+            options=data_frame.columns.to_numpy(),
+            help="Select the column that will be on the vertical axis",
+        )
+    return xaxis_var, yaxis_var
+
+
 # ----- Plotting Functions ----- #
 
 
-def plotly_line_chart(data_frame: pd.DataFrame, height: int = 400) -> None:
+def plotly_line_chart(data_frame: pd.DataFrame, height: int = 600) -> None:
     versus, plot_quantities, mode = get_scatter_plot_params(data_frame)
     fig = go.Figure(layout=go.Layout(height=height))
     for variable in plot_quantities:
@@ -85,7 +102,7 @@ def plotly_line_chart(data_frame: pd.DataFrame, height: int = 400) -> None:
     #     fig.write_html("scatterplot.html")
 
 
-def plotly_histogram(data_frame: pd.DataFrame, height: int = 400) -> None:
+def plotly_histogram(data_frame: pd.DataFrame, height: int = 600) -> None:
     plot_quantities, marginal_mode, histnorm, n_bins = get_histplot_params(data_frame)
     if plot_quantities:  # errors if not
         norm_method = None if histnorm == "None" else histnorm
@@ -101,3 +118,10 @@ def plotly_histogram(data_frame: pd.DataFrame, height: int = 400) -> None:
         st.plotly_chart(fig, use_container_width=True)
     # if st.button("Export to HTML"):
     #     fig.write_html("histogram.html")
+
+
+def plotly_density_contour(data_frame: pd.DataFrame, height: int = 600) -> None:
+    xcol, ycol = get_density_plot_params(data_frame)
+    fig = px.density_contour(data_frame, x=xcol, y=ycol, height=height)
+    fig.update_traces(contours_coloring="fill", contours_showlabels=True)
+    st.plotly_chart(fig, use_container_width=True)
