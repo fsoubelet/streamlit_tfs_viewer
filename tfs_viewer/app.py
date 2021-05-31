@@ -1,4 +1,4 @@
-import os
+from io import StringIO
 from typing import Tuple
 
 import pandas as pd
@@ -7,7 +7,6 @@ import tfs
 
 from tfs_viewer.displays import display_dataframe_report, display_file_dataframe, display_file_headers
 from tfs_viewer.figures import plotly_density_contour, plotly_histogram, plotly_line_chart
-from tfs_viewer.utils import handle_file_upload
 
 GITHUB_BADGE = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"
 GITHUB_URL = "https://github.com/fsoubelet/tfs_viewer_prototype"
@@ -16,26 +15,21 @@ GITHUB_URL = "https://github.com/fsoubelet/tfs_viewer_prototype"
 
 
 @st.cache()
-def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, pd.DataFrame]:
+def load_tfs(uploaded, index: str) -> Tuple[dict, pd.DataFrame]:
     """
-    Loads the chosen TFS file, returns the headers and the dataframe itself. The results are cached for
-    efficiency on heavy files. The file will be a temporary file created from uploaded data, and the file
-    object is used so we can properly close it.
+    Loads the uploaded TFS file, returns the headers and the dataframe itself. The results are cached for
+    efficiency on heavy files.
 
     Args:
-        tfs_file_path (str): absolute path to the file to load.
+        uploaded: the uploaded file object from streamlit, will be converted to strinIO
         index (str): which column to use as inndex during loading.
-        file_obj (int): OS-level handle to the opened file as returned by the tempfile.mkstemp function.
 
     Returns:
         A tuple of the TfsDataFrame's headers (dictionary) and the dataframe itself as a pandas.DataFrame.
     """
-    try:
-        tfs_df = tfs.read(tfs_file_path, index)
-        os.close(file_obj)  # remember to close (and delete) the tempfile
-        return tfs_df.headers, pd.DataFrame(tfs_df)
-    except Exception as error:
-        st.write(error)
+    stringio = StringIO(uploaded.getvalue().decode("utf-8"))
+    tfs_df = tfs.read(stringio, index)
+    return tfs_df.headers, pd.DataFrame(tfs_df)
 
 
 @st.cache()
@@ -118,8 +112,7 @@ st.header("Let's Get Your File")
 uploaded_file = st.file_uploader("File to load", help="Select your TFS File.")
 
 if uploaded_file is not None:
-    file, file_path = handle_file_upload(uploaded_file)
-    headers, dataframe = load_tfs_file(file_path, chosen_index, file)
+    headers, dataframe = load_tfs(uploaded_file, chosen_index)
     dataframe = apply_dataframe_query(dataframe, dataframe_query) if dataframe_query != "" else dataframe
 
     # ----- Section: File Data Display ----- #
