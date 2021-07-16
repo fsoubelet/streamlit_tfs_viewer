@@ -7,7 +7,7 @@ import tfs
 
 from tfs_viewer.displays import display_dataframe_report, display_file_dataframe, display_file_headers
 from tfs_viewer.figures import plotly_density_contour, plotly_histogram, plotly_line_chart
-from tfs_viewer.utils import handle_file_upload
+from tfs_viewer.upload import handle_file_upload
 
 GITHUB_BADGE = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"
 GITHUB_URL = "https://github.com/fsoubelet/tfs_viewer_prototype"
@@ -53,32 +53,42 @@ st.set_page_config(
 )
 st.title(f"TFS File Explorer [![Github]({GITHUB_BADGE})]({GITHUB_URL})")
 
-# ----- Sidebar Widgets ----- #
+# ----- Sidebar Data Manipulation Options ----- #
 
-st.sidebar.header("Data Manipulation")
-chosen_index: str = st.sidebar.text_input("Select Load Index", help="Column to use as index.")
-dataframe_query: str = st.sidebar.text_input(
+data_form = st.sidebar.form("Data Options")
+data_form.header("Data Manipulation")
+chosen_index: str = data_form.text_input("Select Load Index", help="Column to use as index.")
+dataframe_query: str = data_form.text_input(
     "Apply Query to Data",
     help="Any query to apply to the dataframe, to be given to `DataFrame.query`. See the [documentation]"
     "(https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html) "
     "for usage details.",
 )
-st.sidebar.header("Display Options")
-show_headers: bool = st.sidebar.checkbox(
+data_form.form_submit_button("Apply Options")
+
+# ----- Sidebar Data Display Options ----- #
+
+display_form = st.sidebar.form("Display Options")
+display_form.header("Display Options")
+show_headers: bool = display_form.checkbox(
     "Show File Headers", value=False, help="Whether to display the `header` of the loaded file."
 )
-show_dataframe: bool = st.sidebar.checkbox(
+show_dataframe: bool = display_form.checkbox(
     "Show File DataFrame", value=True, help="Whether to display the `DataFrame` of the loaded file."
 )
 if show_dataframe:
-    dataframe_height: int = st.sidebar.select_slider(
+    dataframe_height: int = display_form.select_slider(
         "DataFrame Display Height", options=list(range(100, 850, 50)), value=400
     )
-    color_map: str = st.sidebar.selectbox(
+    color_map: str = display_form.selectbox(
         "Display Color Map",
         options=["None", "viridis", "plasma", "inferno", "magma", "cividis"],
         help="Which colormap to apply when styling the `DataFrame`.",
     )
+display_form.form_submit_button("Apply Options")
+
+# ----- Sidebar Data Exploration Options ----- #
+
 generate_report: bool = st.sidebar.button(
     "Generate An Exploratory Report",
     help="Generate and display a `pandas_profiling` report. Beware: This can be time-intensive on big files!",
