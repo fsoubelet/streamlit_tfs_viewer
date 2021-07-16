@@ -46,10 +46,7 @@ def apply_dataframe_query(data_frame: pd.DataFrame, query: str) -> pd.DataFrame:
 # ----- Page Config ----- #
 
 st.set_page_config(
-    page_title="TFS File Explorer",
-    page_icon="🧊",
-    layout="wide",
-    initial_sidebar_state="expanded",
+    page_title="TFS File Explorer", page_icon="🧊", layout="wide", initial_sidebar_state="expanded",
 )
 st.title(f"TFS File Explorer [![Github]({GITHUB_BADGE})]({GITHUB_URL})")
 
@@ -87,40 +84,27 @@ if show_dataframe:
     )
 display_form.form_submit_button("Apply Options")
 
+# ----- Sidebar Visualization Options ----- #
+
+plots_form = st.sidebar.form("Plotting Choices")
+plots_form.header("Visualizations")
+make_scatterplot: bool = plots_form.checkbox(
+    "Craft a ScatterPlot", help="Check this box to create a `Plotly` scatter or line plot.",
+)
+make_histogram: bool = plots_form.checkbox(
+    "Craft a Histogram", help="Check this box to create a `Plotly` histogram plot."
+)
+make_density_plot: bool = plots_form.checkbox(
+    "Craft a Density Plot", help="Check this box to create a `Plotly` density plot."
+)
+plots_form.form_submit_button("Apply")
+
 # ----- Sidebar Data Exploration Options ----- #
 
 generate_report: bool = st.sidebar.button(
     "Generate An Exploratory Report",
     help="Generate and display a `pandas_profiling` report. Beware: This can be time-intensive on big files!",
 )
-
-# ----- Sidebar Visualization Options ----- #
-
-st.sidebar.header("Visualizations")
-make_scatterplot: bool = st.sidebar.checkbox(
-    "Craft a ScatterPlot",
-    help="Check this box to create a `Plotly` scatter or line plot.",
-)
-if make_scatterplot:
-    line_chart_height = st.sidebar.select_slider(
-        "ScatterPlot Figure Height", options=list(range(200, 1050, 50)), value=600
-    )
-
-make_histogram: bool = st.sidebar.checkbox(
-    "Craft a Histogram", help="Check this box to create a `Plotly` histogram plot."
-)
-if make_histogram:
-    histogram_plot_height = st.sidebar.select_slider(
-        "Histogram Figure Height", options=list(range(200, 1050, 50)), value=600
-    )
-
-make_density_plot: bool = st.sidebar.checkbox(
-    "Craft a Density Plot", help="Check this box to create a `Plotly` density plot."
-)
-if make_density_plot:
-    density_plot_height = st.sidebar.select_slider(
-        "Density Figure Height", options=list(range(200, 1050, 50)), value=600
-    )
 
 # ----- Section: User Input ----- #
 
@@ -134,21 +118,25 @@ if uploaded_file is not None:
 
     # ----- Section: File Data Display ----- #
     if show_headers:
-        display_file_headers(headers)
+        with st.beta_expander("Headers Section - Click to Fold", expanded=True):
+            display_file_headers(headers)
     if show_dataframe:
-        display_file_dataframe(dataframe, dataframe_height, color_map)
+        with st.beta_expander("Data Section - Click to Fold", expanded=True):
+            display_file_dataframe(dataframe, dataframe_height, color_map)
     if generate_report:
         display_dataframe_report(dataframe)
 
     # ----- Section: Visualizations ----- #
     if make_scatterplot:
-        plotly_line_chart(dataframe, line_chart_height)
+        plotly_line_chart(dataframe)
     if make_histogram:
-        plotly_histogram(dataframe, histogram_plot_height)
+        plotly_histogram(dataframe)
     if make_density_plot:
-        plotly_density_contour(dataframe, density_plot_height)
+        plotly_density_contour(dataframe)
 
 # ----- Footer ----- #
+
+st.markdown("-----")
 
 with st.beta_expander("What is This and Who is it For?"):
     st.write(
