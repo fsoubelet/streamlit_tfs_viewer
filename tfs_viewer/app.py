@@ -73,15 +73,14 @@ show_headers: bool = display_form.checkbox(
 show_dataframe: bool = display_form.checkbox(
     "Show File DataFrame", value=True, help="Whether to display the `DataFrame` of the loaded file."
 )
-if show_dataframe:
-    dataframe_height: int = display_form.select_slider(
-        "DataFrame Display Height", options=list(range(100, 850, 50)), value=400
-    )
-    color_map: str = display_form.selectbox(
-        "Display Color Map",
-        options=["None", "viridis", "plasma", "inferno", "magma", "cividis"],
-        help="Which colormap to apply when styling the `DataFrame`.",
-    )
+dataframe_height: int = display_form.select_slider(
+    "DataFrame Display Height", options=list(range(100, 850, 50)), value=400
+)
+color_map: str = display_form.selectbox(
+    "Display Color Map",
+    options=["None", "viridis", "plasma", "inferno", "magma", "cividis"],
+    help="Which colormap to apply when styling the `DataFrame`.",
+)
 display_form.form_submit_button("Apply Options")
 
 # ----- Sidebar Visualization Options ----- #
