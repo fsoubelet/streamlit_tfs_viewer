@@ -20,7 +20,10 @@ def plotly_line_chart(data_frame: pd.DataFrame) -> None:
     for variable in plot_quantities:
         fig.add_trace(
             go.Scattergl(
-                x=data_frame[versus].to_numpy(), y=data_frame[variable].to_numpy(), mode=mode, name=variable,
+                x=data_frame[versus].to_numpy(),
+                y=data_frame[variable].to_numpy(),
+                mode=mode,
+                name=variable,
             )
         )
     st.plotly_chart(fig, use_container_width=True)

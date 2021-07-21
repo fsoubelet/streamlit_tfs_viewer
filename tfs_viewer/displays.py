@@ -23,6 +23,12 @@ def display_file_dataframe(data_frame: pd.DataFrame, height: int, colormap: str)
         else data_frame
     )
     st.dataframe(styler, height=height)
+    st.write(
+        "-----\n"
+        "Please note that displaying big dataframes is a strain on `Streamlit`'s frontend and will "
+        "slow down page refreshes when applying operations. If you loaded a heavy dataframe, consider "
+        "un-ticking the `Show File DataFrame` box in the sidebar."
+    )
 
 
 def display_dataframe_report(data_frame: pd.DataFrame) -> None:

@@ -40,13 +40,16 @@ def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, 
 
 @st.cache()
 def apply_dataframe_query(data_frame: pd.DataFrame, query: str) -> pd.DataFrame:
-    return dataframe.query(dataframe_query)
+    return data_frame.query(dataframe_query)
 
 
 # ----- Page Config ----- #
 
 st.set_page_config(
-    page_title="TFS File Explorer", page_icon="🧊", layout="wide", initial_sidebar_state="expanded",
+    page_title="TFS File Explorer",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 st.title(f"TFS File Explorer [![Github]({GITHUB_BADGE})]({GITHUB_URL})")
 
@@ -88,7 +91,7 @@ display_form.form_submit_button("Apply Options")
 plots_form = st.sidebar.form("Plotting Choices")
 plots_form.header("Visualizations")
 make_scatterplot: bool = plots_form.checkbox(
-    "Craft a ScatterPlot", help="Check this box to create a `Plotly` scatter or line plot.",
+    "Craft a ScatterPlot", help="Check this box to create a `Plotly` scatter or line plot."
 )
 make_histogram: bool = plots_form.checkbox(
     "Craft a Histogram", help="Check this box to create a `Plotly` histogram plot."
@@ -111,14 +114,29 @@ st.header("Let's Get Your File")
 uploaded_file = st.file_uploader("File to load", help="Select your TFS File.")
 
 if uploaded_file is not None:
-    file, file_path = handle_file_upload(uploaded_file)
-    headers, dataframe = load_tfs_file(file_path, chosen_index, file)
-    dataframe = apply_dataframe_query(dataframe, dataframe_query) if dataframe_query != "" else dataframe
+    # At each new upload streamlit increments uploaded_file.id so we can check there to handle session state.
+    # If we return to a previously uploaded file, all this block runs again - but `load_tfs_file` is cached.
+    # However at each change in the page that is not uploadnig a new file, we use session state and don't
+    # run the temporary writing and TFS loading -> very useful for big files!
+    if "id" not in st.session_state or st.session_state.id != uploaded_file.id:
+        st.session_state.id = uploaded_file.id
+        file, file_path = handle_file_upload(uploaded_file)
+        st.session_state.headers, st.session_state.dataframe = load_tfs_file(file_path, chosen_index, file)
+
+    # Sets desired index if it is changed in the sidebar for an already uploaded file
+    if chosen_index != "" and chosen_index in st.session_state.dataframe.columns:
+        st.session_state.dataframe = st.session_state.dataframe.set_index(chosen_index)
+
+    dataframe = (
+        apply_dataframe_query(st.session_state.dataframe, dataframe_query)
+        if dataframe_query != ""
+        else st.session_state.dataframe
+    )
 
     # ----- Section: File Data Display ----- #
     if show_headers:
         with st.beta_expander("Headers Section - Click to Fold", expanded=True):
-            display_file_headers(headers)
+            display_file_headers(st.session_state.headers)
     if show_dataframe:
         with st.beta_expander("Data Section - Click to Fold", expanded=True):
             display_file_dataframe(dataframe, dataframe_height, color_map)
