@@ -5,7 +5,9 @@ import plotly.express as px
 import streamlit as st
 
 
-def get_scatter_plot_params(data_frame: pd.DataFrame) -> Tuple[str, Sequence[str], str, int]:
+def get_scatter_plot_params(
+    data_frame: pd.DataFrame,
+) -> Tuple[str, Sequence[str], str, int, Sequence[str], Sequence[str]]:
     """
     Form to query the user for scatter plots options with minimal reloading.
 
@@ -13,12 +15,13 @@ def get_scatter_plot_params(data_frame: pd.DataFrame) -> Tuple[str, Sequence[str
         data_frame (pd.DataFrame): The user loaded TFS data frame.
 
     Returns:
-        A Tuple with the following user defined properties: X-axis column, Y-axis column, styling mode for
-        the chart and figure height.
+        A Tuple with the following user defined properties: X-axis column, Y-axis column(s), styling mode for
+        the chart, figure height, property(ies) for horizontal error bars and property(ies) for vertical
+        error bars.
     """
     scatter_options_form = st.form("Scatter Plot Options")
-    scatter_options_form.header("Customize You Scatter Plot")
-    versus, columns, height, mode = scatter_options_form.beta_columns(spec=[2, 3, 2, 1])
+    scatter_options_form.header("Customize Your Scatter Plot")
+    versus, columns, err_x, err_y, height, mode = scatter_options_form.beta_columns(spec=[2, 3, 3, 3, 2, 2])
     with versus:
         versus: str = st.selectbox(
             "Property to Plot Against",
@@ -33,8 +36,24 @@ def get_scatter_plot_params(data_frame: pd.DataFrame) -> Tuple[str, Sequence[str
             key="columns_for_scatterplot",
         )
     with height:
-        line_chart_height = st.select_slider(
-            "ScatterPlot Figure Height", options=list(range(200, 1050, 50)), value=600
+        line_chart_height: int = st.select_slider(
+            "ScatterPlot Figure Height", options=list(range(200, 1500, 50)), value=700
+        )
+    with err_x:
+        horizontal_errors: Sequence[str] = st.multiselect(
+            "Hozirontal Error Bars",
+            options=[""] + data_frame.columns.tolist(),
+            help="Property to use for horizontal error bars. Be aware that you should provide as many "
+            "values here than in the `Columns to Plot` box. The first property provided here will be "
+            "used for errors of the first property provided there and so on.",
+        )
+    with err_y:
+        vertical_errors: Sequence[str] = st.multiselect(
+            "Vertical Error Bars",
+            options=[""] + data_frame.columns.tolist(),
+            help="Property to use for vertical error bars. Be aware that you should provide as many "
+            "values here than in the `Columns to Plot` box. The first property provided here will be "
+            "used for errors of the first property provided there and so on.",
         )
     with mode:
         mode: str = st.selectbox(
@@ -43,7 +62,7 @@ def get_scatter_plot_params(data_frame: pd.DataFrame) -> Tuple[str, Sequence[str
             help="The styling of the scatter plot data",
         )
     scatter_options_form.form_submit_button("Submit and Update Plot")
-    return versus, to_plot, mode, line_chart_height
+    return versus, to_plot, mode, line_chart_height, horizontal_errors, vertical_errors
 
 
 def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, str, int, int]:
@@ -59,7 +78,7 @@ def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
         height.
     """
     histplot_options_form = st.form("Histogram Plot Options")
-    histplot_options_form.header("Customize You Histogram Plot")
+    histplot_options_form.header("Customize Your Histogram Plot")
     columns, marginal_mode, normalization_mode, height, n_bins = histplot_options_form.beta_columns(
         spec=[4, 3, 3, 3, 2]
     )
@@ -84,7 +103,7 @@ def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
         )
     with height:
         histogram_plot_height: int = st.select_slider(
-            "Histogram Figure Height", options=list(range(200, 1050, 50)), value=600
+            "Histogram Figure Height", options=list(range(200, 1500, 50)), value=700
         )
     with n_bins:
         nbins: Union[int, float] = st.number_input(  # careful streamlit might infer float from int inputs
@@ -141,7 +160,7 @@ def get_density_plot_params(data_frame: pd.DataFrame) -> Tuple[str, str, str, st
         )
     with height:
         density_plot_height: int = st.select_slider(
-            "Histogram Figure Height", options=list(range(200, 1050, 50)), value=600
+            "Histogram Figure Height", options=list(range(200, 1500, 50)), value=700
         )
     with cmap_reverse:
         reverse_cmap: str = st.selectbox(

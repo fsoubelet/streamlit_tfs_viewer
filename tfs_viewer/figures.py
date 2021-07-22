@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -15,15 +17,25 @@ def plotly_line_chart(data_frame: pd.DataFrame) -> None:
     Args:
         data_frame (pd.DataFrame): The user loaded TFS data frame.
     """
-    versus, plot_quantities, mode, height = get_scatter_plot_params(data_frame)
+    versus, plot_quantities, mode, height, errors_x, errors_y = get_scatter_plot_params(data_frame)
+
+    if len(errors_x) not in [0, len(plot_quantities)] or len(errors_y) not in [0, len(plot_quantities)]:
+        st.error("The amount of properties to plot and of properties to use for error bars do not match!")
+
     fig = go.Figure(layout=go.Layout(height=height))
-    for variable in plot_quantities:
+    for variable, err_x, err_y in zip_longest(plot_quantities, errors_x, errors_y):
         fig.add_trace(
             go.Scattergl(
                 x=data_frame[versus].to_numpy(),
                 y=data_frame[variable].to_numpy(),
                 mode=mode,
                 name=variable,
+                error_x=dict(type="data", array=data_frame[err_x].to_numpy(), visible=True)
+                if err_x in data_frame.columns
+                else None,
+                error_y=dict(type="data", array=data_frame[err_y].to_numpy(), visible=True)
+                if err_y in data_frame.columns
+                else None,
             )
         )
     st.plotly_chart(fig, use_container_width=True)
