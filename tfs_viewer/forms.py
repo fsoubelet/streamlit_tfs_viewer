@@ -43,17 +43,19 @@ def get_scatter_plot_params(
         horizontal_errors: Sequence[str] = st.multiselect(
             "Hozirontal Error Bars",
             options=[""] + data_frame.columns.tolist(),
-            help="Property to use for horizontal error bars. Be aware that you should provide as many "
-            "values here than in the `Columns to Plot` box. The first property provided here will be "
-            "used for errors of the first property provided there and so on.",
+            help="Property to use for horizontal error bars. The first property provided here will be "
+            "used for errors of the first property provided there and so on. Be aware that a mismatch "
+            "in the number of inputs to plot and to use as error bars means some properties will be "
+            "plotted with no error bars.",
         )
     with err_y:
         vertical_errors: Sequence[str] = st.multiselect(
             "Vertical Error Bars",
             options=[""] + data_frame.columns.tolist(),
-            help="Property to use for vertical error bars. Be aware that you should provide as many "
-            "values here than in the `Columns to Plot` box. The first property provided here will be "
-            "used for errors of the first property provided there and so on.",
+            help="Property to use for vertical error bars. The first property provided here will be "
+            "used for errors of the first property provided there and so on. Be aware that a mismatch "
+            "in the number of inputs to plot and to use as error bars means some properties will be "
+            "plotted with no error bars.",
         )
     with mode:
         mode: str = st.selectbox(

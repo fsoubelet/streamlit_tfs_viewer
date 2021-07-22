@@ -20,7 +20,10 @@ def plotly_line_chart(data_frame: pd.DataFrame) -> None:
     versus, plot_quantities, mode, height, errors_x, errors_y = get_scatter_plot_params(data_frame)
 
     if len(errors_x) not in [0, len(plot_quantities)] or len(errors_y) not in [0, len(plot_quantities)]:
-        st.error("The amount of properties to plot and of properties to use for error bars do not match!")
+        st.warning(
+            "The amount of properties to plot and of properties to use for error bars do not match. "
+            "Some properties will be plotted without error bars."
+        )
 
     fig = go.Figure(layout=go.Layout(height=height))
     for variable, err_x, err_y in zip_longest(plot_quantities, errors_x, errors_y):
