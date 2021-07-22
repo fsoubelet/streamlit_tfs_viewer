@@ -1,6 +1,8 @@
 # TFS File Viewer
 
 This is a prototype app using [streamlit][streamlit] to explore the contents of a **TFS** file.
+It lets load and query your data, and visualize its headers and contents by creating and customizing scatter, histogram and density plots on the fly.
+The app also integrates `pandas_profiling` to easily create a report on the data.
 
 ## Getting Started
 
@@ -22,5 +24,5 @@ Copyright &copy; 2021 Felix Soubelet. [MIT License](LICENSE)
 
 [streamlit]: https://streamlit.io/
 [streamlit_badge]: https://static.streamlit.io/badges/streamlit_badge_black_white.svg
-[demo_link]: https://share.streamlit.io/fsoubelet/tfs_viewer_prototype/tfs_viewer/app.py
+[demo_link]: https://share.streamlit.io/fsoubelet/streamlit_tfs_viewer/tfs_viewer/app.py
 [poetry]: https://python-poetry.org/
