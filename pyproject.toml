@@ -6,10 +6,8 @@ authors = ["Felix Soubelet <felix.soubelet@protonmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-streamlit = "^0.84.0"
-pandas-profiling = "^3.0.0"
-streamlit-pandas-profiling = "^0.1.2"
-tfs-pandas = "^2.1.0"
+streamlit = "^1.0"
+tfs-pandas = "^3.0"
 watchdog = "^2.1.2"
 plotly = "^4.14.3"
 
