@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "tfs_viewer"
 version = "0.1.0"
-description = ""
+description = "A Streamlit application to explore data in TFS files"
 authors = ["Felix Soubelet <felix.soubelet@protonmail.com>"]
 
 [tool.poetry.dependencies]
