@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 import tfs
 
-from tfs_viewer.displays import display_dataframe_report, display_file_dataframe, display_file_headers
+from tfs_viewer.displays import display_file_dataframe, display_file_headers
 from tfs_viewer.figures import plotly_density_contour, plotly_histogram, plotly_line_chart
 from tfs_viewer.upload import handle_file_upload
 
@@ -140,8 +140,6 @@ if uploaded_file is not None:
     if show_dataframe:
         with st.beta_expander("Data Section - Click to Fold", expanded=True):
             display_file_dataframe(dataframe, dataframe_height, color_map)
-    if generate_report:
-        display_dataframe_report(dataframe)
 
     # ----- Section: Visualizations ----- #
     if make_scatterplot:
@@ -159,8 +157,7 @@ with st.beta_expander("What is This and Who is it For?"):
     st.write(
         "This is a prototype of a simple `streamlit` app to allow my team and I to easily delve into the "
         "contents of a [TFS file](https://mad.web.cern.ch/mad/madx.old/Introduction/tfs.html), which we use "
-        "in our work. It uses our own `tfs-pandas` package to handle the format and integrates the "
-        "`pandas_profiling` library to get quick insights into the data. Options are also provided to "
+        "in our work. It uses our own `tfs-pandas` package to handle the format and provides options to "
         "quickly craft simple plots from the data using `streamlit`'s API."
     )
     st.write("**DISCLAIMER**: Functionality may change quickly without notice.")

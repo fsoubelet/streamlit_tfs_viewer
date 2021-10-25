@@ -29,11 +29,3 @@ def display_file_dataframe(data_frame: pd.DataFrame, height: int, colormap: str)
         "slow down page refreshes when applying operations. If you loaded a heavy dataframe, consider "
         "un-ticking the `Show File DataFrame` box in the sidebar."
     )
-
-
-def display_dataframe_report(data_frame: pd.DataFrame) -> None:
-    """
-    Generate and display in an expandable block the profile report of the data frame from pandas_profiling.
-    """
-    with st.beta_expander("EXPLORATIVE REPORT (Collapsible)"):
-        st_profile_report(data_frame.profile_report(explorative=True))
