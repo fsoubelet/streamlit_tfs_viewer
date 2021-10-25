@@ -21,7 +21,7 @@ def get_scatter_plot_params(
     """
     scatter_options_form = st.form("Scatter Plot Options")
     scatter_options_form.header("Customize Your Scatter Plot")
-    versus, columns, err_x, err_y, height, mode = scatter_options_form.beta_columns(spec=[2, 3, 3, 3, 2, 2])
+    versus, columns, err_x, err_y, height, mode = scatter_options_form.columns(spec=[2, 3, 3, 3, 2, 2])
     with versus:
         versus: str = st.selectbox(
             "Property to Plot Against",
@@ -81,7 +81,7 @@ def get_histplot_params(data_frame: pd.DataFrame) -> Tuple[Sequence[str], str, s
     """
     histplot_options_form = st.form("Histogram Plot Options")
     histplot_options_form.header("Customize Your Histogram Plot")
-    columns, marginal_mode, normalization_mode, height, n_bins = histplot_options_form.beta_columns(
+    columns, marginal_mode, normalization_mode, height, n_bins = histplot_options_form.columns(
         spec=[4, 3, 3, 3, 2]
     )
     with columns:
@@ -133,7 +133,7 @@ def get_density_plot_params(data_frame: pd.DataFrame) -> Tuple[str, str, str, st
     """
     density_plot_options_form = st.form("Density Plot Options")
     density_plot_options_form.header("Customize Your Density Plot")
-    xaxis, yaxis, contours, cmap, height, cmap_reverse = density_plot_options_form.beta_columns(
+    xaxis, yaxis, contours, cmap, height, cmap_reverse = density_plot_options_form.columns(
         spec=[3, 3, 3, 3, 3, 2]
     )
     with xaxis:

@@ -135,10 +135,10 @@ if uploaded_file is not None:
 
     # ----- Section: File Data Display ----- #
     if show_headers:
-        with st.beta_expander("Headers Section - Click to Fold", expanded=True):
+        with st.expander("Headers Section - Click to Fold", expanded=True):
             display_file_headers(st.session_state.headers)
     if show_dataframe:
-        with st.beta_expander("Data Section - Click to Fold", expanded=True):
+        with st.expander("Data Section - Click to Fold", expanded=True):
             display_file_dataframe(dataframe, dataframe_height, color_map)
 
     # ----- Section: Visualizations ----- #
@@ -153,7 +153,7 @@ if uploaded_file is not None:
 
 st.markdown("-----")
 
-with st.beta_expander("What is This and Who is it For?"):
+with st.expander("What is This and Who is it For?"):
     st.write(
         "This is a prototype of a simple `streamlit` app to allow my team and I to easily delve into the "
         "contents of a [TFS file](https://mad.web.cern.ch/mad/madx.old/Introduction/tfs.html), which we use "
