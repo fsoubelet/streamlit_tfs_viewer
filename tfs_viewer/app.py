@@ -15,7 +15,7 @@ GITHUB_URL = "https://github.com/fsoubelet/tfs_viewer_prototype"
 # ----- Cached Functions ----- #
 
 
-@st.cache()
+@st.cache(suppress_st_warning=True)
 def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, pd.DataFrame]:
     """
     Loads the chosen TFS file, returns the headers and the dataframe itself. The results are cached for
