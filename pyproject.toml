@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "tfs_viewer"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Streamlit application to explore data in TFS files"
 authors = ["Felix Soubelet <felix.soubelet@protonmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8"
 streamlit = "^1.0"
-tfs-pandas = "^3.0"
+tfs-pandas = "^3.4"
 watchdog = "^2.1.2"
-plotly = "^4.14.3"
+plotly = "^4.14"
 matplotlib = "^3.0"
 
 [tool.poetry.dev-dependencies]
