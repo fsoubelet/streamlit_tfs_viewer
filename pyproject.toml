@@ -5,12 +5,12 @@ description = "A Streamlit application to explore data in TFS files"
 authors = ["Felix Soubelet <felix.soubelet@protonmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
-streamlit = "^1.0"
-tfs-pandas = "^3.4"
-watchdog = "^2.1.2"
-plotly = "^5.0"
-matplotlib = "^3.0"
+python = "^3.8"
+streamlit = ">=1.0"
+tfs-pandas = ">=3.4"
+watchdog = ">=2.1.2"
+plotly = ">=5.0"
+matplotlib = ">=3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
