@@ -33,7 +33,7 @@ def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> tuple[dict, 
         tfs_df = tfs.read(tfs_file_path, index)
         os.close(file_obj)  # remember to close (and delete) the tempfile
         return tfs_df.headers, pd.DataFrame(tfs_df)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001
         st.write(error)
 
 
