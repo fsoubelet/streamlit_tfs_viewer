@@ -39,6 +39,7 @@ dependencies = [
     "matplotlib >= 3.8",
     "plotly >= 5.15",
     "streamlit >= 1.30",
+    "watchdog >= 4.0",
 ]
 
 [project.urls]
