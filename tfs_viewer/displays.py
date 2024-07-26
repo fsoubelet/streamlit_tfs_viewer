@@ -13,8 +13,11 @@ def display_file_headers(headers_dict: dict) -> None:
 def display_file_dataframe(data_frame: pd.DataFrame, height: int, colormap: str) -> None:
     """Simply display dataframe, as a Styler object if a colormap is given."""
     st.header("File Data", anchor="dataframe")
+    # Make sure the styler option will allow for the dataframe size
+    n_cells = data_frame.shape[0] * data_frame.shape[1]
+    pd.set_option("styler.render.max_elements", n_cells)
     styler = (
-        data_frame.style.background_gradient(cmap=colormap).highlight_null(null_color="red")
+        data_frame.style.background_gradient(cmap=colormap).highlight_null(color="red")
         if colormap != "None"
         else data_frame
     )

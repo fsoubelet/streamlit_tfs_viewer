@@ -102,10 +102,10 @@ plots_form.form_submit_button("Apply")
 
 # ----- Sidebar Data Exploration Options ----- #
 
-generate_report: bool = st.sidebar.button(
-    "Generate An Exploratory Report",
-    help="Generate and display a `pandas_profiling` report. Beware: This can be time-intensive on big files!",
-)
+# generate_report: bool = st.sidebar.button(
+#     "Generate An Exploratory Report",
+#     help="Generate and display a `pandas_profiling` report. Beware: This can be time-intensive on big files!",
+# )
 
 # ----- Section: User Input ----- #
 
@@ -113,14 +113,8 @@ st.header("Let's Get Your File")
 uploaded_file = st.file_uploader("File to load", help="Select your TFS File.")
 
 if uploaded_file is not None:
-    # At each new upload streamlit increments uploaded_file.id so we can check there to handle session state.
-    # If we return to a previously uploaded file, all this block runs again - but `load_tfs_file` is cached.
-    # However at each change in the page that is not uploadnig a new file, we use session state and don't
-    # run the temporary writing and TFS loading -> very useful for big files!
-    if "id" not in st.session_state or st.session_state.id != uploaded_file.id:
-        st.session_state.id = uploaded_file.id
-        file, file_path = handle_file_upload(uploaded_file)
-        st.session_state.headers, st.session_state.dataframe = load_tfs_file(file_path, chosen_index, file)
+    file, file_path = handle_file_upload(uploaded_file)
+    st.session_state.headers, st.session_state.dataframe = load_tfs_file(file_path, chosen_index, file)
 
     # Sets desired index if it is changed in the sidebar for an already uploaded file
     if chosen_index != "" and chosen_index in st.session_state.dataframe.columns:
