@@ -1,5 +1,4 @@
 import os
-from typing import Tuple
 
 import pandas as pd
 import streamlit as st
@@ -16,7 +15,7 @@ GITHUB_URL = "https://github.com/fsoubelet/tfs_viewer_prototype"
 
 
 @st.cache_data(persist=True)
-def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, pd.DataFrame]:
+def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> tuple[dict, pd.DataFrame]:
     """
     Loads the chosen TFS file, returns the headers and the dataframe itself. The results are cached for
     efficiency on heavy files. The file will be a temporary file created from uploaded data, and the file
@@ -40,7 +39,7 @@ def load_tfs_file(tfs_file_path: str, index: str, file_obj: int) -> Tuple[dict, 
 
 @st.cache_data(persist=True)
 def apply_dataframe_query(data_frame: pd.DataFrame, query: str) -> pd.DataFrame:
-    return data_frame.query(dataframe_query)
+    return data_frame.query(query)
 
 
 # ----- Page Config ----- #

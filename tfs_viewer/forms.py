@@ -1,4 +1,5 @@
-from typing import Sequence, Tuple, Union
+from collections.abc import Sequence
+from typing import Tuple, Union
 
 import pandas as pd
 import plotly.express as px

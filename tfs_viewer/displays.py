@@ -1,4 +1,3 @@
-from typing import Sequence, Tuple
 
 import pandas as pd
 import streamlit as st
